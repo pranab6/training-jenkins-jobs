@@ -1,0 +1,27 @@
+pipeline {
+	agent any
+		stages {
+			stage("Docker build") {
+				steps {
+					script {
+						sh '''
+						echo "Executing docker file"
+						cd ${WORKSPACE}/training-jenkins-jobs/builds/3-terraform+ansible+docker
+/1-docker/ && docker build -t httpd:latest .
+						'''
+						}
+					}
+				}
+
+			stage("Docker push") {
+				steps {
+					script {
+						sh '''
+						echo "create container from image"
+						sudo docker run -t -d --name webserver httpd
+						'''
+						}
+					}
+				}
+			}
+		}
